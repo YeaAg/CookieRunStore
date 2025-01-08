@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h2>FILE UPLOAD 사용</h2>
+    <form th:action="@{/admin/fileupload}" method="post" enctype="multipart/form-data">
+        <input type="file" name="my_files" accept="image/*" multiple>
+        <button>전송</button>
+    </form>
+
+    <h2>CONVERTER 사용</h2>
+    <form th:action="@{/admin/fileconvert}" method="post" enctype="multipart/form-data">
+        <input type="file" name="images[0].data" accept="image/*" >
+        <input type="file" name="images[1].data" accept="image/*" >
+        <button>전송</button>
+    </form>
+</body>
+</html>

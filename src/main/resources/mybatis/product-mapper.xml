@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.koreait.store.mapper.ProductMapper">
+    <resultMap id="productWithImageAndOptionMap" type="ProductDTO" autoMapping="true">
+        <id property="no" column="product_no" />
+        <result property="name" column="product_name" />
+        <result property="price" column="product_price" />
+        <association property="category" javaType="CategoryDTO" autoMapping="true">
+            <id property="no" column="category_no" />
+            <result property="name" column="category_name" />
+        </association>
+        <collection property="options" ofType="ProductOptionDTO" javaType="java.util.TreeSet">
+            <id property="no" column="product_option_no" />
+            <result property="price" column="product_option_price" />
+            <result property="name" column="product_option_name" />
+            <result property="amount" column="product_option_amount" />
+        </collection>
+        <collection property="images" ofType="ProductImageDTO" javaType="list">
+            <id property="no" column="product_image_no"/>
+        </collection>
+    </resultMap>
+    <!-- 해당 카테고리에 해당하는 상품만 전부 조회하는 쿼리 -->
+    <sql id="selectProductByCategory">
+        SELECT * FROM product
+        <if test="categoryNo != 1">
+            WHERE category IN (WITH RECURSIVE `category_cte` AS
+            (
+            SELECT * FROM `category` WHERE `no` = #{categoryNo}
+            UNION
+            SELECT child.* FROM `category_cte` parent
+            INNER JOIN `category` child
+            ON parent.no = child.parent
+            ) SELECT `no` FROM `category_cte`)
+        </if>
+
+    </sql>
+
+    <select id="selectPaginatedProductsTotalCount" resultType="int">
+        SELECT COUNT(*) FROM (<include refid="selectProductByCategory" />) P
+    </select>
+
+    <select id="selectProducts" resultType="ProductDTO" resultMap="productWithImageAndOptionMap">
+        SELECT
+            P.`no` AS product_no,
+            P.`name` AS product_name,
+            P.`price` AS product_price,
+            P.detail,
+            P.uploaded_at,
+
+            PO.`no` AS product_option_no,
+            PO.`price` AS product_option_price,
+            PO.`name` AS product_option_name,
+
+            PI.`no` AS product_image_no
+        FROM (
+            <include refid="selectProductByCategory" />
+            <choose>
+                <when test="sort == 'name'">
+                    ORDER BY `name`
+                </when>
+                <when test="sort == 'low-price'">
+                    ORDER BY `price`
+                </when>
+                <when test="sort == 'high-price'">
+                    ORDER BY `price` DESC
+                </when>
+                <otherwise>
+                    ORDER BY `uploaded_at`
+                </otherwise>
+            </choose>
+            LIMIT #{size} OFFSET #{offset}
+        ) P
+            INNER JOIN product_image PI
+            ON P.`no` = PI.`product_no`
+            LEFT OUTER JOIN product_option PO
+            ON P.`no` = PO.`product_no`
+        <choose>
+            <when test="sort == 'name'">
+                ORDER BY P.`name`
+            </when>
+            <when test="sort == 'low-price'">
+                ORDER BY P.`price`
+            </when>
+            <when test="sort == 'high-price'">
+                ORDER BY P.`price` DESC
+            </when>
+            <otherwise>
+                ORDER BY P.`uploaded_at`
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="selectProductByNo" resultType="ProductDTO" resultMap="productWithImageAndOptionMap">
+        SELECT
+            P.`no` AS product_no,
+            P.`name` AS product_name,
+            P.`price` AS product_price,
+            P.detail,
+            P.uploaded_at,
+
+            CT.no AS category_no,
+            CT.name AS category_name,
+
+            PO.`no` AS product_option_no,
+            PO.`price` AS product_option_price,
+            PO.`name` AS product_option_name,
+
+            PI.`no` AS product_image_no
+        FROM product P
+            INNER JOIN category CT
+            ON P.category = CT.no
+            INNER JOIN product_image PI
+            ON P.`no` = PI.`product_no`
+            LEFT OUTER JOIN product_option PO
+            ON P.`no` = PO.`product_no`
+        WHERE P.`no` = #{productNo};
+    </select>
+
+    <select id="selectProductsByCartProducts" resultType="hashmap" resultMap="productWithImageAndOptionMap">
+        SELECT
+            P.`no`,
+            P.`no` AS product_no,
+            P.`name` AS product_name,
+            P.`price` AS product_price,
+
+            PO.`no` AS product_option_no,
+            PO.`price` AS product_option_price,
+            PO.`name` AS product_option_name,
+
+            PI.`no` AS product_image_no
+        FROM product P
+            INNER JOIN product_image PI
+            ON P.`no` = PI.`product_no`
+            LEFT OUTER JOIN product_option PO
+            ON P.`no` = PO.`product_no`
+        WHERE P.`no` IN
+        <foreach collection="carts" item="cart" open="(" close=")" separator=",">
+            #{cart.product.no}
+        </foreach>
+    </select>
+
+    <resultMap id="categoryWithChildrenMap" type="CategoryDTO">
+        <id property="no" column="parent_no" />
+        <result property="name" column="parent_name" />
+        <collection property="children" ofType="CategoryDTO" javaType="list">
+            <id property="no" column="child_no" />
+            <result property="name" column="child_name" />
+        </collection>
+    </resultMap>
+
+    <select id="selectCategoryMapByCategoryNo" resultType="CategoryDTO">
+        WITH RECURSIVE `category_cte` AS
+        (
+            SELECT * FROM `category` WHERE `no` = #{categoryNo}
+                UNION
+            SELECT parent.* FROM `category_cte` child
+            INNER JOIN `category` parent
+            ON parent.no = child.parent
+        ) SELECT * FROM `category_cte` ORDER BY `level`
+    </select>
+
+
+    <select id="selectCategories" resultType="CategoryDTO" resultMap="categoryWithChildrenMap">
+        SELECT
+            C1.no AS 'parent_no',
+            C1.name AS 'parent_name',
+
+            C2.no AS 'child_no',
+            C2.name AS 'child_name'
+        FROM category C1
+            LEFT OUTER JOIN category C2
+            ON C1.no = C2.parent
+        WHERE C1.parent IS NULL
+    </select>
+
+    <select id="selectPaginatedReviewTotalCountByProductNo" resultType="hashmap">
+        SELECT
+            IFNULL(rate, 'result') AS 'rate',
+            COUNT(rate) AS 'count',
+            AVG(rate) AS 'avg'
+        FROM review WHERE product_no = #{productNo}
+        GROUP BY rate with rollup
+    </select>
+
+    <select id="selectPaginatedReviewsByProductNo" resultType="ReviewDTO">
+        SELECT * FROM review REVIEW
+        INNER JOIN user USER
+        ON REVIEW.user_id = USER.id
+        WHERE product_no = #{productNo}
+        <choose>
+<!--            <when test="sort == ''"> 나중에 인기순 있으면 그때 사용하자-->
+<!--                ORDER BY P.``-->
+<!--            </when>-->
+            <when test="pageInfo.sort == 'low-rate'">
+                ORDER BY REVIEW.`rate`
+            </when>
+            <when test="pageInfo.sort == 'high-rate'">
+                ORDER BY REVIEW.`rate` DESC
+            </when>
+            <otherwise>
+                ORDER BY REVIEW.`uploaded_at`
+            </otherwise>
+        </choose>
+        LIMIT #{pageInfo.size} OFFSET #{pageInfo.offset}
+    </select>
+
+</mapper>

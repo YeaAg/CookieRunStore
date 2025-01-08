@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.koreait.store.mapper.AdminMapper">
+    <insert id="insertProduct">
+        INSERT INTO product VALUES (NULL, #{name}, #{price}, #{detail}, DEFAULT)
+    </insert>
+
+    <insert id="insertProductImages">
+        <selectKey keyProperty="no" resultType="int" order="BEFORE">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO `product_image` VALUES
+        <foreach collection="images" item="image" separator=",">
+            (NULL, #{no}, #{image.originalFileName}, DEFAULT, #{image.data})
+        </foreach>
+    </insert>
+
+    <insert id="insertProductOptions">
+        INSERT INTO product_option VALUES
+        <foreach collection="options" item="option" separator=",">
+            (NULL, #{no}, #{option.name}, #{option.price})
+        </foreach>
+    </insert>
+
+    <insert id="insertFile">
+        INSERT INTO `file_test` VALUES (NULL, #{fileData})
+    </insert>
+    <select id="selectFile">
+        SELECT no, file AS data FROM file_test WHERE no = #{no}
+    </select>
+</mapper>

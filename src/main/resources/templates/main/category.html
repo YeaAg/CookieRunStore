@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/main-layout}"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>카테고리 | KOREA STORE</title>
+    <link rel="stylesheet" href="../../static/css/main/category.css">
+    <script src="../../static/js/main/category.js"></script>
+</head>
+<body>
+    <main layout:fragment="main">
+        <h1>콜렉터블</h1>
+        <header>
+            <div>
+                <span th:text="#{category.registed-item}">등록상품:</span>
+                <b th:text="${pageInfo.totalElementCount} + '건'">13건</b>
+            </div>
+            <ul>
+                <li>
+                    <a th:href="@{/product(categoryNo=${pageInfo.categoryNo}, page=1, size=${pageInfo.size}, sort='recent')}">최신순</a>
+                </li>
+                <li>
+                    <a th:href="@{/product(categoryNo=${pageInfo.categoryNo}, page=1, size=${pageInfo.size}, sort='name')}">이름순</a>
+                </li>
+                <li>
+                    <a th:href="@{/product(categoryNo=${pageInfo.categoryNo}, page=1, size=${pageInfo.size}, sort='low-price')}">낮은 가격순</a>
+                </li>
+                <li>
+                    <a th:href="@{/product(categoryNo=${pageInfo.categoryNo}, page=1, size=${pageInfo.size}, sort='high-price')}">높은 가격순</a>
+                </li>
+                <li>
+                    <label>
+                        <span>보기설정</span>
+                        <select id="view-size-select">
+                            <option value="10" th:selected="${pageInfo.size == 10}">10개</option>
+                            <option value="25" th:selected="${pageInfo.size == 25}">25개</option>
+                            <option value="30" th:selected="${pageInfo.size == 30}">30개</option>
+                            <option value="50" th:selected="${pageInfo.size == 50}">50개</option>
+                        </select>
+                    </label>
+                </li>
+            </ul>
+        </header>
+        <section>
+            <div class="item" th:each="product: ${pageInfo.elements}">
+                <a class="image-container" th:href="@{|/product/${product.no}|}">
+                    <img th:src="@{|/image/${product.images[0].no}|}" src="https://jp.cookierunstore.com/web/product/medium/202312/27a96ac44b5d30888302cb8673663719.jpg" alt="">
+                </a>
+                <b class="title" th:text="${product.name}">クッキーラン霊魂石キーホルダー第4弾</b>
+                <b class="price" th:text="${product.price}">1,192원</b>
+            </div>
+        </section>
+        <ol th:if="${pageInfo.page <= pageInfo.totalPageCount}">
+            <li th:if="${pageInfo.startPage != 1}">
+                <a th:href="@{/product(
+                    categoryNo=${pageInfo.categoryNo},
+                    page=${pageInfo.startPage - 1},
+                    size=${pageInfo.size},
+                    sort=${pageInfo.sort}
+                )}">
+                    <i class="bi bi-caret-left-fill"></i>
+                </a>
+            </li>
+            <li th:if="${pageInfo.startPage <= pageInfo.endPage}" th:each="pageNumber: ${#numbers.sequence(pageInfo.startPage, pageInfo.endPage)}">
+                <a th:href="@{/product(
+                    categoryNo=${pageInfo.categoryNo},
+                    page=${pageNumber},
+                    size=${pageInfo.size},
+                    sort=${pageInfo.sort})}"
+                   th:text="${pageNumber}"
+                   th:active="${pageInfo.page == pageNumber}">1</a>
+            </li>
+            <li th:if="${pageInfo.endPage != pageInfo.totalPageCount}">
+                <a th:href="@{/product(
+                    categoryNo=${pageInfo.categoryNo},
+                    page=${pageInfo.endPage + 1},
+                    size=${pageInfo.size},
+                    sort=${pageInfo.sort})}">
+                    <i class="bi bi-caret-right-fill"></i>
+                </a>
+            </li>
+        </ol>
+    </main>
+</body>
+</html>

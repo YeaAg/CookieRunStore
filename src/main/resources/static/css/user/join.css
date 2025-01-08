@@ -1,0 +1,185 @@
+@import "../public/public.css";
+
+main{
+    width: 700px;
+    margin: 0 auto;
+}
+h1{
+    text-align: center;
+    font-size: var(--font-size-xx-large);
+    margin: 40px 0;
+}
+h2{
+    margin: 10px 0;
+}
+/********************************/
+form > section{
+    margin-bottom: 40px;
+}
+form > section > div{
+    display: flex;
+    align-items: center;
+    margin: 15px 0;
+}
+form > section > div > i{
+    font-size: var(--font-size-large);
+    margin-right: 10px;
+    flex-basis: 35px;
+    text-align: center;
+}
+form input{
+    font-size: var(--font-size-small);
+    width: 100%;
+    padding: 5px 10px;
+}
+/********************************/
+.id-input-container label{
+    flex: 1;
+}
+.id-input-container button{
+    font-family: Medium;
+    font-size: var(--font-size-small);
+    margin-left: 10px;
+    padding: 0 10px;
+    align-self: stretch;
+    background-color: var(--Pasteles-2-rgba);
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    &:hover{
+        opacity: 0.8;
+    }
+}
+/********************************/
+.pw-input-container label{
+    flex: 1;
+}
+.pw-re-input-container label{
+    flex: 1;
+}
+/********************************/
+.tel-input-container > label:not(.tel-head-label){
+    flex: 1;
+}
+.tel-input-container > .tel-head-label{
+    align-self: stretch;
+}
+.tel-input-container > .tel-head-label select{
+    padding: 0 20px;
+    height: 100%;
+    font-size: var(--font-size-x-small);
+}
+.tel-input-container > span{
+    margin: 0 10px;
+    font-size: var(--font-size-small);
+}
+.tel-input-container > button{
+    align-self: stretch;
+    padding: 0 10px;
+    margin-left: 10px;
+    font-family: Medium;
+    font-size: var(--font-size-small);
+    background-color: var(--Pasteles-2-rgba);
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    &:hover{
+        opacity: 0.8;
+    }
+}
+/********************************/
+.email-input-container > label:not(.email-tail-label){
+    flex: 1;
+}
+.email-input-container > .email-tail-label{
+    align-self: stretch;
+    margin: 0 10px;
+}
+.email-input-container > .email-tail-label select{
+    padding: 0 20px;
+    height: 100%;
+    font-size: var(--font-size-x-small);
+}
+.email-input-container > span{
+    margin: 0 10px;
+    font-size: var(--font-size-small);
+}
+.email-input-container .bi-at{
+    margin: 0 2px;
+    text-align: center;
+}
+.email-input-container > button{
+    align-self: stretch;
+    padding: 0 10px;
+    font-family: Medium;
+    font-size: var(--font-size-small);
+    background-color: var(--Pasteles-2-rgba);
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    &:hover{
+        opacity: 0.8;
+    }
+}
+/********************************/
+.email-auth-input-container > label{
+    flex: 1;
+}
+.email-auth-input-container input{
+    text-align: center;
+}
+.email-auth-input-container > button{
+    align-self: stretch;
+    padding: 0 40px;
+    font-family: Regular;
+    margin-left: 10px;
+    font-size: var(--font-size-small);
+    background-color: var(--Dark-gray-textured-background---5-rgba);
+    color: white;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    &:hover{
+        opacity: 0.8;
+    }
+}
+/********************************/
+.nickname-input-container > label{
+    flex: 1;
+}
+/********************************/
+.join-btn-section{
+    margin: 60px 0;
+    text-align: center;
+}
+.join-btn-section > button{
+    margin: 0 10px;
+    padding: 12px 0;
+    width: 200px;
+    font-size: var(--font-size-small);
+    cursor: pointer;
+    border-radius: 2px;
+    border: none;
+    transition-duration: 0.2s;
+}
+.join-btn-section > button[type=submit]{
+    background-color: var(--Spring-WT-5-rgba);
+    &:hover {
+        background-color: var(--Spring-WT-1-rgba);
+    }
+}
+.join-btn-section > button[type=button] {
+    &:hover {
+        background-color: var(--Dark-gray-textured-background---1-rgba);
+    }
+}
+/********************************/
+.error-container{
+    display: none;
+    margin: 2px 0 4px 0;
+    padding: 0 55px;
+    color: var(--Pasteles-5-rgba);
+}
+.error-container[active]{
+    display: block;
+}

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.koreait.store.mapper.UserMapper">
+    <resultMap id="userWithSnsInfoMap" type="UserDTO" autoMapping="true">
+        <id property="id" column="id" />
+        <collection property="snsInfo" ofType="com.koreait.store.dto.SnsInfoDTO" javaType="list">
+            <id property="id" column="sns_id" />
+            <result property="name" column="name" />
+            <result property="connectedDate" column="connected_date" />
+        </collection>
+    </resultMap>
+
+    <!-- id를 통해 유저 정보 조회하기   -->
+    <select id="selectUserById" resultType="UserDTO" resultMap="userWithSnsInfoMap">
+        SELECT
+            *, USER.id AS 'user_id', SNS_INFO.id AS 'sns_id'
+        FROM `user` `USER`
+                 LEFT OUTER JOIN `sns_info` `SNS_INFO`
+                                 ON USER.id = SNS_INFO.user_id
+        WHERE USER.id = #{id}
+    </select>
+    <!-- ci를 통해 유저 정보 조회하기   -->
+    <select id="selectUserByCi" resultType="UserDTO" resultMap="userWithSnsInfoMap">
+        SELECT
+            *, USER.id AS 'user_id', SNS_INFO.id AS 'sns_id'
+        FROM `user` `USER`
+                 LEFT OUTER JOIN `sns_info` `SNS_INFO`
+                                 ON USER.id = SNS_INFO.user_id
+        WHERE USER.ci = #{ci}
+    </select>
+    <!-- UserDTO 객체의 값으로 유저 등록하기   -->
+    <insert id="insertUser">
+        INSERT INTO `user` (id, ci, password, tel, email, nickname, profile_image)
+        VALUES (#{id}, #{ci}, #{password}, #{tel}, #{email}, #{nickname}, NULL)
+    </insert>
+
+    <insert id="insertSnsInfo">
+        INSERT INTO `sns_info` (id, user_id, name)
+        VALUES (#{id}, #{userId}, #{name})
+    </insert>
+
+    <insert id="insertReview">
+        INSERT INTO `review` (product_no, user_id, text, rate)
+        VALUES (#{productNo}, #{userId}, #{text}, #{rate})
+    </insert>
+</mapper>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+<head>
+    <meta charset="UTF-8">
+    <meta th:name="${_csrf.parameterName}" th:content="${_csrf.token}">
+    <title>주문 | KOREA STORE</title>
+    <link rel="stylesheet" href="../../static/css/user/order.css">
+
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
+    <script src="../../static/js/user/order.js" defer></script>
+
+</head>
+<body>
+    <main>
+        <h1>주문결제</h1>
+        <section class="order-container">
+            <div id="order-info">
+                <section>
+                    <div class="order-info-container">
+                        <h2>주문자 정보</h2>
+                        <label>
+                            <input type="checkbox" id="order-user-same-button">
+                            <span>회원정보로 기입하기</span>
+                        </label>
+                    </div>
+                    <div class="order-name-container">
+                        <label for="order-name">주문자명</label>
+                        <input type="text" id="order-name"  th:data="${#authentication.principal.nickname}">
+                    </div>
+                    <div class="order-phone-container">
+                        <label for="order-phone">연락처</label>
+                        <input type="text" id="order-phone"  th:data="${#authentication.principal.tel}">
+                    </div>
+                    <div class="order-email-container">
+                        <label for="order-email">이메일주소</label>
+                        <input type="text" id="order-email" placeholder="example@naver.com"  th:data="${#authentication.principal.email}">
+                    </div>
+                </section>
+
+                <section>
+                    <div class="shipping-info-container">
+                        <h2>배송지 정보</h2>
+                        <label>
+                            <input type="checkbox" id="shipping-orderer-same-button">
+                            <span>주문자 정보와 동일</span>
+                        </label>
+                    </div>
+                    <div class="shipping-name-container">
+                        <label for="shipping-name">이름</label>
+                        <input type="text" id="shipping-name">
+                    </div>
+                    <div class="shipping-phone-container">
+                        <label for="shipping-phone">연락처</label>
+                        <input type="text" id="shipping-phone">
+                    </div>
+                    <div class="shipping-addr-container">
+                        <label for="shipping-postcode">주소</label>
+                        <div>
+                            <div>
+                                <input type="text" id="shipping-postcode" readonly>
+                                <button type="button" id="shipping-search-button">주소검색</button>
+                            </div>
+                            <label><input type="text" id="shipping-addr" placeholder="주소" readonly></label>
+                            <label><input type="text" id="shipping-addr-detail" placeholder="상세주소를 입력해주세요"></label>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="payment-method">
+                    <h2>결제수단</h2>
+                    <button id="smart-pay" type="button" active>
+                        <span>간편결제</span>
+                        <i></i>
+                    </button>
+                    <ul active>
+                        <li>
+                            <button type="button" active>
+                                <img src="../../static/images/icon/kakao_pay_icon.png" alt="카카오페이"/>
+                            </button>
+                        </li>
+                        <li>
+                            <button type="button">
+                                <img src="../../static/images/icon/naver_pay_icon.svg" alt="네이버페이"/>
+                            </button>
+                        </li>
+                    </ul>
+                    <button id="credit-card" type="button">
+                        <span>신용/체크카드</span>
+                        <i></i>
+                    </button>
+                </section>
+            </div>
+
+            <div id="order-product-info">
+                <section class="order-product-info-container">
+                    <h2>주문상품</h2>
+                    <span th:text="${session.carts.size()} + '개'">3개</span>
+                </section>
+
+                <section>
+                    <ul class="order-product-list">
+                        <li class="product" th:each="cart: ${session.carts}" th:id="|${cart.no}-${cart.amount}|">
+                            <img th:src="@{|/image/${cart.product.images[0].no}|}" src="https://jp.cookierunstore.com/web/product/big/202402/7159f5620115d20fbb90b6493e35e8e1.jpg" alt="#">
+                            <div class="product-title-container">
+                                <b th:text="${cart.product.name}">クッキーランマルチポーチ</b>
+                                <ul class="option-list-container">
+                                    <li th:each="option: ${cart.product.options}" th:text="|[${option.name} (+${option.price})] x${option.amount}|">クッキーランマルチポーチ	</li>
+                                </ul>
+                            </div>
+                            <div class="product-price-container">
+                                <b th:text="${#numbers.formatCurrency(cart.product.price)}">51,900원</b><span th:text="${cart.amount} + '개'">1개</span>
+                            </div>
+                        </li>
+                    </ul>
+                </section>
+
+                <section class="order-product-total-price-container">
+                    <div>
+                        <span>상품금액</span><span>84,600원</span>
+                    </div>
+                    <div>
+                        <span>할인금액</span><span>0원</span>
+                    </div>
+                    <div>
+                        <span>배송비</span><span>10,000,000원</span>
+                    </div>
+                </section>
+
+                <section class="order-total-price-container" th:data="${totalPrice}">
+                    <span>총 결제금액</span>
+                    <b th:text="${#numbers.formatCurrency(totalPrice)}">87,600원</b>
+                </section>
+
+                <button id="order-button" type="button">결제하기</button>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

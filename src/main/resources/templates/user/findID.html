@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../../static/css/user/findID.css">
+    <script src="../../static/js/user/findID.js" defer></script>
+
+</head>
+<body>
+    <main>
+        <h1>IDをお忘れの方</h1>
+        <p>IDをお忘れの方は、ご登録のメールアドレスをご入力のうえ、「確認」ボタンを押してください。</p>
+        <form>
+            <div class="email-input-container">
+                <span>이메일 입력</span>
+                <label><input type="text"></label>
+            </div>
+            <div class="find-id">
+                <span>아이디</span>
+            </div>
+            <button class="find-button">찾기</button>
+        </form>
+    </main>
+</body>
+</html>

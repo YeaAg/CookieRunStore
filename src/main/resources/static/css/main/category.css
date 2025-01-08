@@ -1,0 +1,86 @@
+@import "../public/public.css";
+
+main{
+    padding: 0 250px;
+}
+
+h1{
+    text-align: center;
+    margin: 60px;
+}
+/***********************************/
+main > header{
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--font-size-x-small);
+    margin-bottom: 25px;
+    color: var(--Dark-gray-textured-background---4-rgba);
+}
+main > header li{
+    display: inline-block;
+    list-style: none;
+}
+main > header li:not(:last-child)::after{
+    content: "|";
+    margin: 0 10px;
+}
+main > header a{
+    text-decoration: none;
+    color: var(--Dark-gray-textured-background---4-rgba);
+}
+/*****************************************************/
+main > section{
+    display: grid;
+    grid-gap: 80px 30px;
+    grid-template-columns: repeat(4, 1fr);
+}
+main > section .item{
+    display: inline-flex;
+    text-align: center;
+    flex-direction: column;
+}
+main > section .image-container{
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 10px;
+    &:hover > img{
+        transform: scale(120%);
+    }
+}
+main > section .image-container > img{
+    width: 100%;
+    height: 100%;
+    transition-duration: 0.2s;
+    object-fit: contain;
+}
+main > section .title{
+    text-decoration: none;
+    color: var(--Dark-gray-textured-background---5-rgba);
+    font-family: Medium;
+    font-weight: bold;
+    font-size: var(--font-size-xx-small);
+    margin-bottom: 10px;
+}
+main > section .price{
+    color: var(--Pasteles-5-rgba);
+    font-family: Medium;
+    font-size: var(--font-size-xx-small);
+}
+/*******************************************/
+main > ol{
+    margin: 50px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+main > ol > li{
+    margin: 0 8px;
+}
+main > ol a{
+    color: black;
+    font-size: var(--font-size-x-small);
+    font-weight: normal;
+}
+main> ol a[active=true]{
+    font-weight: bold;
+}

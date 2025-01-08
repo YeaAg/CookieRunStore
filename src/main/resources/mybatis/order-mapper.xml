@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.koreait.store.mapper.OrderMapper">
+    <insert id="insertCart" useGeneratedKeys="true" keyProperty="no">
+        INSERT INTO `cart` (no, user_id, product_no, amount)
+        VALUES (NULL, #{user.id}, #{product.no}, 1)
+    </insert>
+    <insert id="insertCartOptions">
+<!--        <selectKey keyProperty="no" resultType="int" order="BEFORE">-->
+<!--            SELECT LAST_INSERT_ID()-->
+<!--        </selectKey> 위에--> <!-- useGeneratedKeys="true" keyProperty="no" 때문에 안해도 됨 -->
+        INSERT INTO `cart_option` (no, cart_no, product_option_no, amount) VALUES
+        <foreach collection="product.options" item="option" separator=",">
+            (NULL, #{no}, #{option.no}, #{option.amount})
+        </foreach>
+    </insert>
+
+    <resultMap id="cartWithCartOptionMap" type="CartDTO">
+        <id property="no" column="cart_no" />
+        <result property="amount" column="cart_amount" />
+        <association property="product" javaType="ProductDTO" resultMap="com.koreait.store.mapper.ProductMapper.productWithImageAndOptionMap">
+
+        </association>
+    </resultMap>
+    <select id="selectCartsByNumberAndUser" resultType="CartDTO" resultMap="cartWithCartOptionMap">
+        SELECT * FROM `select_carts_by_user_view`
+        WHERE `user_id` = #{user.id} AND `cart_no` IN
+        <foreach collection="cartNumbers" item="number" open="(" separator="," close=")">
+            #{number}
+        </foreach>
+
+    </select>
+    <select id="selectCartsByUser" resultType="CartDTO" resultMap="cartWithCartOptionMap">
+        SELECT * FROM `select_carts_by_user_view`
+        WHERE `user_id` = #{id}
+    </select>
+
+    <update id="updateCartAmount">
+        UPDATE cart
+        SET `amount` = #{amount}
+        WHERE no = #{no} AND user_id = #{user.id}
+    </update>
+
+    <delete id="deleteCartByNoAndUser">
+        DELETE FROM `cart`
+        WHERE no = #{no} AND user_id = #{user.id}
+    </delete>
+    <delete id="deleteCartsByNoAndUser">
+        DELETE FROM `cart`
+        WHERE user_id = #{user.id} AND cart.no IN
+        <foreach collection="carts" item="cart" open="(" separator="," close=")">
+            #{cart.no}
+        </foreach>
+    </delete>
+
+    <!--===========================================================-->
+
+    <insert id="insertOrder">
+        INSERT INTO `order` (id, user_id, imp_uid, name, total_price, shipping_name, shipping_tel, shipping_addr, shipping_postcode, shipping_addr_detail, orderer_name, orderer_tel, orderer_email, ordered_at)
+        VALUES (#{id}, #{user.id}, #{impUid}, #{name}, #{totalPrice}, #{shippingName},#{shippingTel},#{shippingAddr},#{shippingPostcode},#{shippingAddrDetail},#{ordererName},#{ordererTel},#{ordererEmail}, DEFAULT)
+    </insert>
+    <select id="insertOrderProductsAndOptions" statementType="CALLABLE">
+        CALL order_proc(#{orderJsonString,mode=IN});
+    </select>
+
+    <!--===========================================================-->
+
+    <resultMap id="orderWithProductAndOptionMap" type="OrderDTO" autoMapping="true">
+        <id property="id" column="id" />
+        <collection property="carts" javaType="list" ofType="CartDTO">
+            <id property="no" column="product_no" />
+            <result property="amount" column="amount" />
+            <association property="product" javaType="ProductDTO" resultMap="com.koreait.store.mapper.ProductMapper.productWithImageAndOptionMap" />
+        </collection>
+    </resultMap>
+
+    <select id="selectOrders" resultType="OrderDTO" resultMap="orderWithProductAndOptionMap">
+        SELECT
+            O.*,
+            OP.amount,
+
+            P.no AS product_no,
+            P.name AS product_name,
+            P.price AS product_price,
+
+            PI.no AS product_image_no,
+
+            PO.no AS product_option_no,
+            PO.name AS product_option_name,
+            PO.price AS product_option_price
+        FROM `order` O
+            INNER JOIN `order_product` OP
+            ON O.id = OP.order_id
+            INNER JOIN `product` P
+            ON OP.product_no = P.no
+            INNER JOIN `product_image` PI
+            ON PI.product_no = P.no
+            LEFT OUTER JOIN `order_product_option` OPO
+            ON OP.no = OPO.order_product_no
+            LEFT OUTER JOIN korea_store.product_option PO
+            ON OPO.product_option_no = PO.no
+        WHERE O.user_id = #{userId}
+          <if test="orderId != null">
+              AND O.id = #{orderId}
+          </if>
+    </select>
+</mapper>

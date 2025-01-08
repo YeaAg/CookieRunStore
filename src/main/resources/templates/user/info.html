@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../../static/css/user/info.css">
+    <script src="https://kit.fontawesome.com/d19fdaba43.js" crossorigin="anonymous"></script>
+    <script src="../../static/js/user/info.js" defer></script>
+</head>
+<body>
+    <div class="my-info-container">
+        <section class="my-info-section">
+            <div id="my-icon" style="background-image: url('https://static2.e-himart.co.kr/contents/goods/00/19/48/46/59/0019484659__MW64027_5000188269__M_450_450.jpg')"></div>
+            <div class="my-info">
+                <span th:text="|${#authentication.name}(${#authentication.principal.nickname == null ? '설정되지않음' : #authentication.principal.nickname})|">abcd@naver.com</span>
+                <a href="#">회원정보 수정</a>
+            </div>
+        </section>
+    </div>
+
+    <main>
+        <nav class="my-menu-list-nav">
+            <ul>
+                <li active>구매내역</li>
+                <li>찜</li>
+                <li>배송지목록</li>
+            </ul>
+        </nav>
+
+        <div class="my-order-container">
+            <h1>구매내역</h1>
+            <section class="my-order-section">
+                <div class="my-order-status-container">
+                    <div class="my-order-status">
+                        <span>0</span>
+                        <span>결제완료</span>
+                    </div>
+                    <div class="my-order-status">
+                        <span>0</span>
+                        <span>배송완료</span>
+                    </div>
+                    <div class="my-order-status">
+                        <span>0</span>
+                        <span>취소</span>
+                    </div>
+                </div>
+                <label>
+                    <select id="my-order-period">
+                        <option selected>최근 6개월</option>
+                        <option>최근 12개월</option>
+                        <option>2022</option>
+                        <option>2021</option>
+                        <option>2020</option>
+                        <option>2019</option>
+                    </select>
+                </label>
+            </section>
+
+            <section class="order-list-section">
+                <ul>
+                    <li th:each="order: ${orders}">
+                        <div class="order-number">
+                            <span>주문번호:</span>
+                            <a href="#" th:text="${order.id}">123457899</a>
+                        </div>
+
+                        <div class="order-summary" th:with="product=${order.carts[0].product}">
+                            <div class="order-major-img">
+                                <img th:src="@{|/image/${product.images[0].no}|}" alt="상품이미지">
+                            </div>
+                            <div class="order-info">
+                                <span class="order-title" th:text="${product.name}">「結束バンドLIVE-恒星-」ライブロゴTシャツ（4サイズ）</span>
+                                <span class="order-date" th:text="${order.orderedAt}">2023.12.21</span>
+                                <span class="order-total-price" th:text="${order.totalPrice}">30,000원</span>
+                                <span class="order-status order-complete">결제완료</span>
+                                <div>
+                                    <button class="order-detail-btn">상세정보</button>
+                                    <button class="order-review-btn">리뷰작성</button>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+        </div>
+    </main>
+
+    <div class="order-detail-container">
+        <button id="order-detail-close-btn"><i class="fa-solid fa-xmark"></i></button>
+        <section class="order-detail-product-section">
+
+            <table>
+                <caption>주문상품</caption>
+                <thead>
+                <tr>
+                    <th>순번</th>
+                    <th>이미지</th>
+                    <th>상품명</th>
+                    <th>가격</th>
+                    <th>수량</th>
+                    <th>총가격</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td class="product-no">1</td>
+                    <td class="product-img">
+                        <img src="https://www.pokemoncenter-online.com/static/product_image/4521329403496/4521329403496.jpg" alt="#">
+                    </td>
+                    <td class="product-summary">
+                        <div class="title">ハンドタオル Whats your charm point? ピカチュウ</div>
+                        <div class="sub-title">(ハンドタオル Whats your charm point? ピカチュウ)</div>
+                    </td>
+                    <td class="product-price">8,800원</td>
+                    <td class="product-amount">4</td>
+                    <td id="product-total-price" rowspan="100">5411452원</td>
+                </tr>
+                <tr>
+                    <td class="product-no">2</td>
+                    <td class="product-img">
+                        <img src="https://www.pokemoncenter-online.com/static/product_image/4521329391465/4521329391465_S.jpg" alt="#">
+                    </td>
+                    <td class="product-summary">
+                        <div class="title">ハンドタオル Whats your charm point? ピカチュウ</div>
+                        <div class="sub-title">(ハンドタオル Whats your charm point? ピカチュウ)</div>
+                    </td>
+                    <td class="product-price">121,000원</td>
+                    <td class="product-amount">10</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <table id="shipping-detail" class="details">
+                <caption>배송지 정보</caption>
+                <colgroup>
+                    <col class="col1">
+                    <col class="col2">
+                    <col class="col3">
+                    <col class="col4">
+                </colgroup>
+                <thead>
+                <tr>
+                    <th>받는분</th>
+                    <th>전화번호</th>
+                    <th>주소</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>배송지명배송지명1</td>
+                    <td>010-1234-5678</td>
+                    <td>배송지명배송지명배송지명3</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <table id="orderer-detail" class="details">
+                <caption>주문자 정보</caption>
+                <colgroup>
+                    <col class="col1">
+                    <col class="col2">
+                    <col class="col3">
+                    <col class="col4">
+                </colgroup>
+                <thead>
+                <tr>
+                    <th>주문자명</th>
+                    <th>전화번호</th>
+                    <th>이메일</th>
+                    <th>주문날짜</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>배송지명배송지명1</td>
+                    <td>010-1234-5678</td>
+                    <td>배송지명배송지명배송지명3</td>
+                    <td>배송지명배송지명배송지명4</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <table id="pay-detail" class="details"></table>
+        </section>
+    </div>
+    <div class="review-container">
+        <form th:action="@{/user/review}" method="post" class="review-form">
+            <h3>
+                리뷰작성
+            </h3>
+            <label>
+                <span>상품선택:</span>
+                <select name="productNo" id="review-products"></select>
+            </label>
+            <div class="review-user-stars">
+                <button type="button"><i class="fa-solid fa-star"></i></button>
+                <button type="button"><i class="fa-regular fa-star"></i></button>
+                <button type="button"><i class="fa-regular fa-star"></i></button>
+                <button type="button"><i class="fa-regular fa-star"></i></button>
+                <button type="button"><i class="fa-regular fa-star"></i></button>
+            </div>
+            <label><textarea name="text"></textarea></label>
+            <div class="button-container">
+                <button type="submit">작성하기</button>
+                <button type="button">닫기</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

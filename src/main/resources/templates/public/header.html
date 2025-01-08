@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>HEADER</title>
+    <link rel="stylesheet" href="../../static/css/public/header.css">
+</head>
+<body>
+<header th:fragment="header" id="main-header">
+    <a href="/" class="main-header-logo">
+        <img src="../../static/images/logo/header_logo.png" width="200" alt="메인로고">
+    </a>
+
+    <ul class="main-menu-ul">
+        <li th:each="category: ${categories}">
+            <a th:href="@{|/product?categoryNo=${category.no}|}" th:text="${category.name}">ALL</a>
+            <ul class="header-child-menu" th:if="${category.children}">
+                <li th:each="childCategory: ${category.children}">
+                    <a th:href="@{|/product?categoryNo=${childCategory.no}|}" th:text="${childCategory.name}">ALL</a>
+                </li>
+            </ul>
+        </li>
+
+        <!--            <li>-->
+        <!--                <a href="">ALL</a>-->
+        <!--            </li>-->
+        <!--            <li><a href="">BEST</a></li>-->
+        <!--            <li>-->
+        <!--                <a href="">콜렉션</a>-->
+        <!--                <ul class="header-child-menu">-->
+        <!--                    <li><a href="">쿠키 빌리지</a></li>-->
+        <!--                    <li><a href="">콜렉터블 피규어</a></li>-->
+        <!--                    <li><a href="">마스코트 인형 키링</a></li>-->
+        <!--                    <li><a href="">영혼석 키링</a></li>-->
+        <!--                </ul>-->
+        <!--            </li>-->
+        <!--            <li><a href="">테마상품</a></li>-->
+        <!--            <li>-->
+        <!--                <a href="">카테고리</a>-->
+        <!--                <ul class="header-child-menu">-->
+        <!--                    <li><a href="">토이</a></li>-->
+        <!--                    <li><a href="">문구</a></li>-->
+        <!--                    <li><a href="">리빙</a></li>-->
+        <!--                    <li><a href="">소형가전</a></li>-->
+        <!--                    <li><a href="">잡화</a></li>-->
+        <!--                    <li><a href="">도서앨범</a></li>-->
+        <!--                </ul>-->
+        <!--            </li>-->
+        <li>
+            <a href="">커뮤니티</a>
+            <ul class="header-child-menu">
+                <li><a href="">공지사항</a></li>
+                <li><a href="">FAQ</a></li>
+                <li><a href="">상품리뷰</a></li>
+                <li><a href="">Q&A</a></li>
+            </ul>
+        </li>
+    </ul>
+
+    <section>
+        <nav>
+            <ul class="header-sub-menu">
+                <li>
+<!--                    <th:block sec:authorize="isAnonymous()">익명유저임</th:block>-->
+<!--                    <th:block sec:authorize="isAuthenticated()">인증되었음</th:block>-->
+                    <a sec:authorize="not authenticated" href="/user/login">
+                        <i class="bi bi-person"></i>
+                    </a>
+                    <form sec:authorize="authenticated" name="logout-form" th:action="@{/user/logout}" method="post">
+                        <button><i type="submit" class="bi bi-door-open"></i></button>
+                    </form>
+                    <ul class="header-child-menu">
+                        <th:block sec:authorize="not authenticated">
+                            <li><a href="/user/login">로그인</a></li>
+                            <li><a href="/user/join">회원등록</a></li>
+                        </th:block>
+                        <th:block sec:authorize="authenticated">
+                            <li><a href="/user/info">마이페이지</a></li>
+                            <li><a href="/user/info">주문이력</a></li>
+                        </th:block>
+                    </ul>
+                </li>
+                <li><a href="/user/cart"><i class="bi bi-cart"></i></a></li>
+                <li><a href=""><i class="bi bi-search"></i></a></li>
+            </ul>
+        </nav>
+
+        <ul class="header-country-ul">
+            <li>
+                <a th:href="@{|?locale=${#locale.KOREAN}|}"><img src="../../static/images/icon/icons8-south-korea-96.png" width="35" alt="한국어"/></a>
+                <a th:href="@{|?locale=${#locale.JAPAN}|}"><img src="../../static/images/icon/icons8-japan-96.png" width="35" alt="일본어"/></a>
+                <a th:href="@{|?locale=${#locale.ENGLISH}|}"><img src="../../static/images/icon/icons8-usa-96.png" width="35" alt="영어"/></a>
+            </li>
+        </ul>
+    </section>
+</header>
+</body>
+</html>

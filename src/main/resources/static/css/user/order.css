@@ -1,0 +1,259 @@
+@import "../public/public.css";
+
+main{
+    --main-padding: 300px;
+    margin: 40px 0;
+}
+main > h1{
+    padding: 0 var(--main-padding);
+    margin: 20px 0 ;
+}
+
+.order-container{
+    position: relative;
+    padding: 0 var(--main-padding);
+    min-width: 1600px;
+    display: flex;
+    background-color: var(--Spring-WT-2-rgba);
+}
+/*******************************************/
+#order-info{
+    flex: 3;
+}
+#order-info > section{
+    margin: 20px 20px 20px 0;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 4px;
+}
+
+
+
+/*******************************************/
+#order-product-info{
+    flex: 2;
+}
+#order-info > section > div{
+    display: flex;
+}
+
+#order-info > section{
+    padding: 20px 30px;
+}
+
+#order-info > section > div{
+    margin: 10px 0;
+    font-size: var(--font-size-small);
+}
+#order-info > section label{
+    width: 150px;
+}
+#order-info > section input{
+    flex: 1;
+    padding: 4px 10px;
+    font-size: var(--font-size-small);
+}
+
+#order-info > section > div:first-child > label{
+    flex: 1;
+    text-align: right;
+    font-size: var(--font-size-small);
+}
+#order-info > section > div:first-child > label > input{
+    margin-right: 5px;
+}
+
+
+/***********************************************/
+.shipping-addr-container > div {
+    flex: 1;
+}
+.shipping-addr-container > div > div > button {
+    border: unset;
+    border-radius: 4px;
+    background-color: var(--Spring-WT-1-rgba);
+    padding: 10px;
+    font-size: var(--font-size-x-small);
+    cursor: pointer;
+    &:hover{
+        opacity: 0.8;
+    }
+}
+#order-info .shipping-addr-container > div > label{
+    display: block;
+    margin: 10px 0;
+    width: 100%;
+}
+#order-info .shipping-addr-container > div > label > input{
+    width: 100%;
+}
+
+/********************************************/
+#order-info > .payment-method  > h2{
+    margin-bottom: 20px;
+}
+#order-info > .payment-method  > button{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin: 5px 0;
+    padding: 5px 10px;
+    font-size: var(--font-size-small);
+    border: 1px solid black;
+    border-radius: 4px;
+    background-color: rgba(0,0,0,0.1);
+    cursor: pointer;
+}
+#order-info > .payment-method > button[active]{
+    background-color: var(--Pasteles-3-rgba);
+    & > i{
+        border: unset;
+        background-color: var(--Dark-gray-textured-background---5-rgba);
+    }
+}
+#order-info > .payment-method  > button > span{
+    flex: 1;
+}
+#order-info > .payment-method > button > i{
+    display: block;
+    width: 15px;
+    height: 15px;
+    border: 1px solid var(--Dark-gray-textured-background---1-rgba);
+    background-color: white;
+    border-radius: 50%;
+    margin-left: auto;
+}
+#order-info > .payment-method ul {
+    display: none;
+    margin: 10px 0;
+    grid-template-columns: repeat(6, 1fr);
+    align-items: center;
+    grid-gap: 10px;
+}
+#order-info > .payment-method ul[active]{
+    display: grid;
+}
+#order-info > .payment-method ul > li{
+}
+#order-info > .payment-method ul > li > button{
+    border: unset;
+    background-color: unset;
+    cursor: pointer;
+    &:hover{
+        opacity: 0.8;
+    }
+}
+#order-info > .payment-method ul > li > button:not([active]){
+    opacity: 0.5;
+}
+#order-info > .payment-method ul img{
+    width: 100%;
+}
+/*******************************************************************/
+
+#order-product-info{
+    top: 0;
+    position: sticky;
+    margin: 20px 0 20px 20px;
+    border-radius: 4px;
+    border: 2px solid black;
+    padding: 15px 20px;
+    background-color: white;
+    align-self: start;
+}
+
+#order-product-info > section{
+    display: flex;
+}
+
+.order-product-info-container{
+    align-items: center;
+    font-size: var(--font-size-small);
+    padding-bottom: 10px;
+    border-bottom: 1px solid black;
+}
+.order-product-info-container > h2 {
+    margin-right: 5px;
+    font-size: var(--font-size-small);
+}
+.order-product-list{
+    width: 100%;
+    height: max(450px);
+    overflow: auto;
+}
+/* ( 크롬, 사파리, 오페라, 엣지 ) 동작 */
+.order-product-list::-webkit-scrollbar{
+    display: none;
+}
+.order-product-list {
+    -ms-overflow-style: none; /* 인터넷 익스플로러 */
+    scrollbar-width: none; /* 파이어폭스 */
+}
+
+.product{
+    display: grid;
+    padding: 10px 0;
+    margin: 10px 0;
+    grid-template-areas:
+            'img title'
+            'img price';
+    grid-template-columns: 120px auto;
+    grid-gap: 10px;
+    border-bottom: 1px solid var(--abstract-gray-background---3-rgba);
+}
+.product > img{
+    grid-area: img;
+    width: 100%;
+}
+.product-title-container{
+    grid-area: title;
+}
+.product-title-container > b{
+    font-size: var(--font-size-small);
+}
+.product-title-container > ul{
+    font-size: var(--font-size-x-small);
+}
+.product-price-container{
+    margin: auto 0;
+    text-align: right;
+    grid-area: price;
+    font-size: var(--font-size-small);
+}
+.product-price-container > b{
+    margin-right: 5px;
+}
+/**********************************************/
+.order-product-total-price-container{
+    border-top: 1px solid  black;
+    border-bottom: 1px solid  black;
+    margin: 20px 0;
+    padding: 10px 0;
+    flex-direction: column;
+}
+.order-product-total-price-container > div{
+    display: flex;
+    margin: 5px 0;
+    justify-content: space-between;
+    font-size: var(--font-size-small);
+}
+/**************************************************/
+.order-total-price-container{
+    justify-content: space-between;
+    font-size: var(--font-size-normal);
+}
+
+#order-product-info > button{
+    width: 100%;
+    margin: 20px 0;
+    padding: 10px 0;
+    font-size: var(--font-size-normal);
+    border: unset;
+    background-color: var(--Pasteles-3-rgba);
+    cursor: pointer;
+    font-weight: bold;
+    &:hover{
+        opacity: 0.8;
+    }
+}

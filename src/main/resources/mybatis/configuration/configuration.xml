@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <setting name="jdbcTypeForNull" value="NULL"/>
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+    <typeAliases>
+        <typeAlias type="com.koreait.store.dto.UserDTO" alias="UserDTO" />
+        <typeAlias type="com.koreait.store.dto.SnsInfoDTO" alias="SnsInfoDTO" />
+        <typeAlias type="com.koreait.store.dto.CategoryDTO" alias="CategoryDTO" />
+        <typeAlias type="com.koreait.store.dto.ProductDTO" alias="ProductDTO" />
+        <typeAlias type="com.koreait.store.dto.OrderDTO" alias="OrderDTO" />
+        <typeAlias type="com.koreait.store.dto.CartDTO" alias="CartDTO" />
+        <typeAlias type="com.koreait.store.dto.ReviewDTO" alias="ReviewDTO" />
+        <typeAlias type="com.koreait.store.dto.ProductImageDTO" alias="ProductImageDTO" />
+        <typeAlias type="com.koreait.store.dto.ProductOptionDTO" alias="ProductOptionDTO" />
+    </typeAliases>
+</configuration>

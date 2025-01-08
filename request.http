@@ -1,0 +1,16 @@
+### 토큰(인증값)을 발급받기
+POST https://api.iamport.kr/users/getToken
+Content-Type: application/json
+
+{
+  "imp_key": "6864136815582560",
+  "imp_secret": "oVQqpNzPOw6BPuqPBPFEUpAS7v4f1BDeZSXeKQssNPX8umj9jPPcITrpSuObUEbWxMy0xTo9Ow5OqpEQ"
+}
+
+### 결제정보 단건조회
+GET https://api.iamport.kr/payments
+Authorization: Bearer 2af69f8c24bb4404a56be8205fd6760c0d716863
+
+### 토큰을 전달하면서 본인인증 완료 정보를 응답받기
+GET https://api.iamport.kr/certifications/imp_731452032284
+Authorization: Bearer 2d01c6586ed9c5e24b9b9a52b3d10e1deb017b39
