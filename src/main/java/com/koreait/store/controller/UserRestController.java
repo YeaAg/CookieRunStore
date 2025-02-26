@@ -21,8 +21,7 @@ public class UserRestController {
 
     @GetMapping("/id/{userId}")
     public ResponseEntity<Void> get_userId(
-            @PathVariable("userId") String userId,
-            HttpSession session
+            @PathVariable("userId") String userId
     ){
         if(userRestService.find_user_by_id(userId)){
             return ResponseEntity.ok().build(); // 200

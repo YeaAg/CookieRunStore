@@ -34,6 +34,7 @@ public class SecurityConfiguration {
             configure.requestMatchers("/user/join", "/user/cart").permitAll();
             configure.requestMatchers("/product/*","/product/**").permitAll();
             configure.requestMatchers("/chatbot").permitAll();
+            configure.requestMatchers("/error").permitAll();
             configure.anyRequest().authenticated();
 //            configure.anyRequest().permitAll();
         });
